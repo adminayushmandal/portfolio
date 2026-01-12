@@ -1,1 +1,19 @@
-<p>project-card works!</p>
+<p-card class="mb-3 rounded-lg! sm:h-36 h-36 border border-solid border-primary-300">
+  <div class="flex items-center gap-x-2 mb-3">
+    <i class="pi pi-github"></i>
+    <a [href]="project()?.clone_url" target="_blank"
+       class="sm:text-lg text-[14px] truncate max-w-fit block text-primary-600 font-bold">{{ project()?.name }}</a>
+  </div>
+  <div class="mb-3">
+    @if (project()?.language) {
+      <p-tag value="{{ project()?.language }}" severity="info" class="p-1! text-[10px]! sm:text-sm! mb-2"/>
+    }
+    <br>
+    @if (project()?.stargazers_count) {
+      <div class="flex items-center gap-x-1">
+        <span class="me-2 sm:text-lg text-sm">{{ project()?.stargazers_count }}</span>
+        <p-rating stars="1" [ngModel]="project()?.stargazers_count" disabled="true"/>
+      </div>
+    }
+  </div>
+</p-card>
