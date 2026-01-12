@@ -1,5 +1,5 @@
 <main class="w-full h-screen md:px-10 md:py-6 px-2 py-4">
-  <div class="w-full max-w-md mx-auto">
+  <div class="w-full max-w-lg mx-auto">
     <!--    =======Theme switcher=======-->
     <div class="w-full max-w-fit mx-auto sm:mb-8 mb-6">
       <p-button icon="pi pi-sun" severity="secondary" [rounded]="true"/>
@@ -22,6 +22,10 @@
           <a href="https://linkedin.com/in/ayush-03-kumar" target="_blank" pButton size="small" text [rounded]="true"
              severity="secondary">
             <i class="pi pi-linkedin" pButtonIcon></i>
+          </a>
+          <a href="https://instagram.com/ayush.k.mandal" target="_blank" pButton size="small" text [rounded]="true"
+             severity="secondary">
+            <i class="pi pi-instagram" pButtonIcon></i>
           </a>
         </div>
       </div>
@@ -49,21 +53,34 @@
         <span pButtonLabel>Download CV</span>
         <i class="pi pi-download" pButtonIcon></i>
       </button>
-      <button type="button" pButton size="small" severity="secondary" class="w-full">
+      <button type="button" pButton size="small" severity="secondary" class="w-full" (click)="contact.set(!contact())">
         <span pButtonLabel>Contact me</span>
         <i class="pi pi-envelope" pButtonIcon></i>
       </button>
     </div>
 
     <!--=========== Tabs ===========-->
-    <p-tabs value="0">
+    <p-tabs value="0" class="mb-3">
       <p-tablist class="w-full sm:py-2 sm:px-3 py-1 px-1.5 rounded-lg">
         <p-tab value="0" class="w-1/2 text-center rounded-lg">Projects</p-tab>
         <p-tab value="1" class="w-1/2 text-center rounded-lg">Skills</p-tab>
       </p-tablist>
       <p-tabpanels>
         <p-tabpanel value="0">
-          Projects will be added soon.
+          <div class="grid sm:grid-cols-2 grid-cols-1 sm:gap-x-2 gap-x-0">
+            @if (!projectLoader()) {
+              @for (project of repositories(); track project.name) {
+                <app-project-card [project]="project"/>
+              } @empty {
+                <p class="text-sm sm:text-lg text-shadow-slate-200">No projects found</p>
+              }
+            } @else {
+              <div class="w-full h-full flex items-center justify-center pt-3">
+                <p-progress-spinner fill="transparent" animationDuration=".8s" strokeWidth="6"
+                                    [style]="{width: '3rem', height: '3rem'}"/>
+              </div>
+            }
+          </div>
         </p-tabpanel>
         <p-tabpanel value="1">
           <div class="grid sm:grid-cols-2 grid-cols-1 sm:gap-x-2 gap-x-0">
@@ -74,5 +91,52 @@
         </p-tabpanel>
       </p-tabpanels>
     </p-tabs>
+    <footer class="w-full h-16 bg-surface-200 dark:bg-surface-950 flex items-center justify-center ">
+      <span class="text-sm text-slate-400">All rights reserved {{ datetime | date:'yyyy' }}</span>
+    </footer>
   </div>
 </main>
+<p-dialog [closable]="false" maskStyleClass="backdrop-blur-sm" header="Contact me" #contactDlg [(visible)]="contact"
+          [style]="{width: '30rem'}">
+  <form class="flex items-center flex-wrap gap-x-2 w-full">
+    <p-input-group class="mb-3 sm:flex-1">
+      <p-inputgroup-addon>
+        <i class="pi pi-user"></i>
+      </p-inputgroup-addon>
+      <p-float-label variant="on">
+        <input type="text" name="firstName" id="firstName" pInputText fluid pSize="small">
+        <label for="firstName">First name</label>
+      </p-float-label>
+    </p-input-group>
+
+    <p-inputgroup class="mb-3 sm:flex-1">
+      <p-inputgroup-addon>
+        <i class="pi pi-user"></i>
+      </p-inputgroup-addon>
+      <p-float-label variant="on">
+        <input type="text" name="lastName" id="lastName" pInputText fluid pSize="small">
+        <label for="lastName">Last name</label>
+      </p-float-label>
+    </p-inputgroup>
+
+    <p-input-group class="mb-3">
+      <p-inputgroup-addon>
+        <i class="pi pi-cog"></i>
+      </p-inputgroup-addon>
+      <p-float-label variant="on">
+        <input type="text" name="purpose" id="purpose" pInputText fluid pSize="small">
+        <label for="purpose">Purpose</label>
+      </p-float-label>
+    </p-input-group>
+
+    <p-float-label variant="on" class="mb-3 flex-1">
+      <textarea name="message" id="message" rows="4" pInputTextarea pSize="small" fluid></textarea>
+      <label for="message">Message</label>
+    </p-float-label>
+
+    <div class="w-full flex justify-end items-center gap-x-2">
+      <p-button label="Send" type="submit" icon="pi pi-send" size="small"/>
+      <p-button label="Cancel" severity="danger" size="small" (onClick)="contactDlg.close($event)"/>
+    </div>
+  </form>
+</p-dialog>

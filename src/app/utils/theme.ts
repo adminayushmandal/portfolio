@@ -94,6 +94,11 @@ export const theme = definePreset(Aura, {
           },
         },
       },
+    },
+    dialog: {
+      header: {
+        padding: "0.75rem 1rem",
+      }
     }
   }
 })
